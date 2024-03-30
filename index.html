@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en" style = "scroll-behavior: smooth;">
+	<head>
+		<script type="text/javascript"
+		  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+		</script>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale = 1.0">
+		<title>Neural Networks from Scratch</title>
+		<link rel="icon" href="images/jm.png">
+		<link rel = "stylesheet" href="style.css">
+	</head>
+	<nav class = "navbar">
+		<div class = "max-width">
+			<div class = "logo"><a href="#">Neural Networks from Scratch</a></div>
+			<ul class = "menu">
+				<li><a href="https://joseph-ma.com">Go Back</a></li>
+			</ul>
+		</div>
+	</nav>
+	<body>
+		<div class = "top_info">
+			<div class = "pic1">
+				<img src = "images/nn.png" class = "pic" width = "100%" alt = "">
+			</div>
+			<div class = "information">
+				<div class = "text">About</div>
+				<p>
+					Neural Networks and deep learning were always a black box to me. You put in some data and it gives you back a prediction... magic! Even when using <b><a href = "https://en.wikipedia.org/wiki/TensorFlow" target = "_blank">TensorFlow</a></b> or <b><a href = "https://en.wikipedia.org/wiki/PyTorch" target = "_blank">PyTorch</a></b> it wasn't crystal clear what was going on so I decided to create one from scratch. No TensorFlow, no PyTorch just NumPy, Python and some Calculus with Linear Algebra. Neural Networks are a type of supervised learning algorithm where we have a lot of data usually labeled (x<sub>i</sub>, y<sub>i</sub>). If we train the model enough, lets say from (x<sub>1</sub>, y<sub>1</sub>) to (x<sub>10000</sub>, y<sub>10000</sub>). The model should learn and if we give it a value x<sub>10001</sub> (which it has never seen before), it should be able to accurately tell you the output is y<sub>10001</sub>.
+					
+					<br><br>
+					I chose a couple of data sets to train my neural network on. Below you may find the google colab page for each one.
+					<ul class = "shift">
+						<li>The Iris Flower Dataset</li>
+						<li>MNIST Dataset</li>
+						<li>CIFAR-10 dataset</li>
+						<li>Fashion MNIST Dataset</li>
+					</ul>
+					<br>
+					To work through the steps, I will be using the Iris Flower Dataset as an example but I wrote the code such that we have a Layer and Neural Network class so that we may conveniently adjust the number of layers and neurons depending on the nature of our dataset. <br>
+				</p>
+			</div>
+		</div>
+		<br>
+		<div class = "filters">
+			<div class = "filters_about">
+				<div class = "text">Structure of the Neural Network with the Iris Dataset</div>
+				<p>
+					The Iris Dataset consists of 150 samples of data. Each sample of data has 4 features with a label corresponding to the flower those features belong to.<br><br>
+					<b>Features</b> include:
+					<ul class = "shift">
+						<li>Sepal Length (Denoted as Input x1 in the network) </li>
+						<li>Sepal Width (Denoted as Input x2 in the network)</li>
+						<li>Petal Length (Denoted as Input x3 in the network)</li>
+						<li>Petal Width (Denoted as Input x4 in the network)</li>
+					</ul><br>
+					<b>Species</b> include:
+					<ul class = "shift">
+						<li>Iris Setosa (Denoted as Output \( \hat{y} \)1) </li>
+						<li>Iris Versicolor (Denoted as Output \( \hat{y} \)2)</li>
+						<li>Iris Virginica (Denoted as Output \( \hat{y} \)3)</li>
+					</ul><br>
+
+					Our goal is for the neural network to be able to predict the species of an unseen dataset. For example if we have an <b>input [7.7, 2.6, 6.9, 2.3]</b>. Where <b>sepal length = 7.7 cm</b>, <b>sepal width = 2.6 cm</b>, <b>petal length = 6.9 cm</b> and <b>petal width = 2.3 cm</b> and the neural network has never seen this before, it should be able to accurately predict which species this is. The neural network would output something like this <b>[0.013, 0.022, 0.96]</b>. Where <b><strong>\( \boldsymbol{\hat{y}} \)</strong>1 = 0.013</b> meaning there is a <b>1.3% chance it is a Iris Setosa</b>, <b><strong>\( \boldsymbol{\hat{y}} \)</strong>2 = 0.022</b> meaning there is a <b>2.2% chance it is a Iris Versicolor</b> and <b><strong>\( \boldsymbol{\hat{y}} \)</strong>3 = 0.96</b> meaning there is a <b>96% chance it is a Iris Virginica</b>. This will be compared to the true output which should be <b>[0, 0, 1]</b> assuming the species is really an Iris Virginica.
+
+				</p>
+			</div>
+			<div class = "pic2">
+				<img src = "images/structure.png" class = "pic" width = "100%" alt = "">
+			</div>
+		</div>
+		<br>
+		<div class = "filters">
+			<div class = "filters_about">
+				<div class = "text">Training Steps</div>
+				<p>
+					We can summarize the training in about 5 steps here though I will go into more details later.
+					<ol class = "shift"><br>
+						<b><li>Preparing Data</li></b>
+						The original data contains 150 data sets with X-features corresponding to y-labels. We split 80% of the x-features with corresponding y-labels for training. This <b>X-train, y-train</b> data will be used for <b>step 2 to 4</b>. The other 20% of the data will be reserved for <b>step 5</b>. In order to evaluate the neural network's abilities, it will not be allowed to see this data set. This way we will know whether it truly learned the model.
+						<b><li>Forward Propagation</li></b>
+						Pass the X-train data through the network and get the <strong>\( \boldsymbol{\hat{y}} \)</strong> predicted results. 
+						<b><li>Evaluate Loss</li></b>
+						Figure out how far our predicted values deviated from the true values.
+						<b><li>Backpropagation, Gradient Descent and adjusting weight/biases</li></b>
+						This is where we tell the network to learn from its mistakes. The main idea behind this is figuring out how which direction to tune each weight and bias in the network to minimize the loss. <b> --> We repeat step 2 to 4 several times until the network has learned the model</b> .
+						<b><li>Evaluate the model</li></b>
+						Now we test our network on unseen data. Tell it to figure out what the Y-test labels are to the X-test data. We mark the accuracy/score at the end based on how many of those data points the network got right.
+					</ol><br>
+				</p>
+			</div>
+			<div class = "pic2">
+				<img src = "images/steps.png" class = "pic" width = "100%" alt = "">
+			</div>
+		</div>
+		<br>
+		<div class = "filters">
+			<div class = "filters_about_2">
+				<div class = "text">Weights, biases and notation</div>
+				<p>
+					To simplify, i'm just going to look at the first and last neuron of layer 0 (I'll consider the input layer as layer 0) and the first and last neuron of layer 1 (The first hidden layer). <br>
+					<b>Weights W<sub>i(j,k)</sub></b>
+					<li>Each neuron's outgoing connection has a unique weight associated with it. We can denote each unique weight as <b>W<sub>i(j,k)</sub></b> where <b>i - layer, j - neuron from, k - neuron to</b>. </li>
+					<b>Biases b<sub>ij</sub></b>
+					<li>Each neuron except the ones from the input (layer 0) have a unique bias. We can denote each unique bias as <b>b<sub>ij</sub></b> where <b>i - layer, j - neuron to</b>. </li>
+					<b>Weighted inputs Z<sub>ij</sub></b>
+					<li>The value entering each neuron is a sum of the weighted inputs + its bias. For example, the value entering the first neuron in layer 1 is Z<sub>ij</sub>. Its value can be calculated as a weighted sum of the inputs plus its bias: <b>Z<sub>11</sub> = W<sub>0(1,1)</sub>*x<sub>1</sub> + W<sub>0(2,1)</sub>*x<sub>2</sub> + W<sub>0(3,1)</sub>*x<sub>3</sub> + W<sub>0(4,1)</sub>*x<sub>4</sub> + b<sub>11</sub></b></li>
+					<b>Outputs</b>
+					<li>The inputs are then run through an activation function which will be covered below. In this neural network we will be using two activation functions <b>ReLU</b> and <b>SoftMax</b>. The output of the function is the output value of the neuron which will serve as the values for the next layer assuming we are not at the final layer.</li>
+				</p>
+			</div>
+			<div class = "pic4">
+				<img src = "images/weights.png" class = "pic" width = "100%" alt = "">
+			</div>
+		</div>
+		<br>
+		<div class = "filters">
+			<div class = "pic6">
+				<img src = "images/forward1.png" class = "pic" width = "100%" alt = "">
+			</div>
+			<div class = "pic7">
+				<img src = "images/forward2.png" class = "pic" width = "100%" alt = "">
+			</div>
+		</div>
+		<br>
+		<div class = "filters">
+			<div class = "potentiometer">
+				<div class = "text">Activation Function: ReLU</div>
+				<p>
+					The activation function introduces non-linearity into our neural network. Without the use of activation functions, our neural network will just be a bunch of linear combinations - that's going to be useless. If a connection is not strong enough, it will just not "fire" the neuron. What ReLU does is it only passes the value z<sub>ij</sub> on if the value exceeds 0. If it is below 0, the connection is simply not strong enough and the output a<sub>ij</sub> will be 0. <br>
+					<br>
+					In simple terms:<br>
+					If z<sub>ij</sub> > 0 then a<sub>ij</sub> = z<sub>ij</sub><br>
+					Otherwise:
+					a<sub>ij</sub> = 0
+					<br><br>
+					We can also write the ReLU function as <b>f(x) = max(0, x)</b>.
+
+				</p>
+			</div>
+			<div class = "pic8">
+				<img src = "images/relu.png" class = "pic" width = "100%" alt = "">
+			</div>
+		</div>
+		<br><br><br>
+		<div class = "filters">
+			<div class = "pic6">
+				<img src = "images/forward3.png" class = "pic" width = "100%" alt = "">
+			</div>
+			<div class = "pic7">
+				<img src = "images/forward4.png" class = "pic" width = "100%" alt = "">
+			</div>
+		</div>
+		<br>
+		<div class = "filters">
+			<div class = "pic6">
+				<img src = "images/forward5.png" class = "pic" width = "100%" alt = "">
+			</div>
+			<div class = "pic7">
+				<img src = "images/forward6.png" class = "pic" width = "100%" alt = "">
+			</div>
+		</div>
+		<br><br>
+		<div class = "filters">
+			<div class = "potentiometer">
+				<div class = "text">Activation Function: SoftMax</div>
+				<p>
+				Softmax is another activation function that allows us to take the output as percentages. At the moment, the logits <b>z<sub>31</sub>, z<sub>32</sub>, z<sub>33</sub> </b> on their own do not represent percentages. The softmax function addresses this by exponentiating each logit, summing these exponentials, and then dividing each exponentiated logit by this total sum. This process effectively converts the logits into a set of values that are interpretable as the model's confidence in each possible outcome, with all the values summing up to 100%. In other words, softmax allows us to evaluate the confidence level of the machine learning model in its predictions, presenting the output as percentages.
+
+				</p>
+				<p>$$\text{softmax}(z_{ij}) = \frac{e^{z_{ij}}}{\sum_{k=1}^{N} e^{z_{ik}}}$$</p>
+				<p>
+				<ul class = "shift">
+					<li><b>Z</b> - the logit</li>
+					<li><b>i</b> - the network layer (usually the last layer if we are using SoftMax)</li>
+					<li><b>j, k</b> - the neuron number</li>
+					<li><b>N</b> - the number of logits</li>
+				</ul>
+				</p>
+				
+			</div>
+			<div class = "pic8">
+				<img src = "images/softmax.png" class = "pic" width = "100%" alt = "">
+			</div>
+		</div>
+		<br><br>
+		<div class = "filters">
+			<div class = "potentiometer">
+				<div class = "text">Evaluate Loss: Categorical Cross-Entropy Loss</div>
+				<p>
+				So how do we evaluate how close the model is to the true output? We use a loss function called categorical cross-entropy loss. The formula calculates the loss by summing the negative logarithms of the predicted probabilities (<strong>\( \boldsymbol{\hat{y}} \)<sub>c</sub></strong>) for each category, weighted by the actual labels (<strong>\( \boldsymbol{\hat{y}} \)<sub>c</sub></strong>) across all M categories. 
+
+				</p>
+				<p>$$L = -\sum_{c=1}^{M} y_c \log(\hat{y}_c)$$</p>
+				<p>
+					<ul class = "shift">
+					<li><b>c</b> - the output neuron number/ category we are predicting</li>
+					<li><b>M</b> - the number of output neurons/ number of categories we are predicting</li>
+					<li><b><strong>\( \boldsymbol{\hat{y}} \)</strong><sub>c</sub></b> - the c<sub>th</sub> predicted value </li>
+					<li><strong>\( \boldsymbol{y_c} \)</strong> - the true value (from y train)</li>
+				</ul>
+				<br>
+				<p>In the examples we can see what happens when our model is <b>96%</b> sure it is Iris Virginica and it truly is Iris Virginica: the loss is only <b>0.041</b>. When the model is <b>68%</b> sure it is Iris Versicolor, but it is actually Iris Virginica: the loss increases to <b>1.386</b>. 
+				</p>
+			</div>
+			<div class = "pic9">
+				<img src = "images/loss.png" class = "pic" width = "100%" alt = "">
+			</div>
+		</div>
+		<br><br>
+		<div class = "filters">
+			<div class = "potentiometer">
+				<div class = "text">Minimizing loss: Gradient Descent</div>
+				<p>
+				So how do we get our model to do better? We can aim to minimize the loss. To find the minimum of a function we can solve for the derivative. It's true that when the derivative of a function is at zero we are at a minimum or maximum but sometimes it is highly impractical or even impossible to solve for that. To approach this from another way, we apply gradient descent. Gradient descent finds the current instantaneous slope and updates our parameter based on that. <br><br>
+				Let's say we want to see how much we need to shift our current weight <b>w</b> by in order to reduce the value outputed by the <b>Loss</b> function which we can put for example as <b>Loss = (w + 5)<sup>2</sup></b>. If we differentiate the <b>Loss</b> function with respect to <b>w</b> we can solve for the <b>instantaneous slope</b> of the <b>Loss function</b> at any point along the x-axis. We update our <b>w</b> parameter and move closer to the optimal value to minimize the <b>Loss</b> through subtracting a learning rate <b>α - alpha</b> (0.3 here) * the <b>instantaneous slope at that point</b>. <br><br>
+				Initial <b>w = -7, L = 4</b><br>
+				After 1st iteration: <b>w = -5.8, L = 0.64</b><br>
+				After 2nd iteration: <b>w = -5.32, L = 0.1024</b><br>
+				After 3rd iteration: <b>w = -5.128, L = 0.016384</b><br>
+				After 4th iteration: <b>w = -5.0512, L = 0.00262144</b><br>
+				After 5th iteration: <b>w = -5.02048, L = 0.0004194304</b><br>
+
+				</p>
+			</div>
+			<div class = "pic9">
+				<img src = "images/gradients.png" class = "pic" width = "100%" alt = "">
+			</div>
+		</div>
+		<br>
+		<div class = "filters">
+			<div class = "pic6">
+				<img src = "images/backward.png" class = "pic" width = "100%" alt = "">
+			</div>
+			<div class = "pic7">
+				<img src = "images/backward2.png" class = "pic" width = "100%" alt = "">
+			</div>
+		</div>
+		<br>
+		<div class = "filters">
+			<div class = "pic6">
+				<img src = "images/backward3.png" class = "pic" width = "100%" alt = "">
+			</div>
+			<div class = "pic7">
+				<img src = "images/backward4.png" class = "pic" width = "100%" alt = "">
+			</div>
+		</div>
+		<br>
+		<div class = "filters">
+			<div class = "pic6">
+				<img src = "images/backward5.png" class = "pic" width = "100%" alt = "">
+			</div>
+			<div class = "pic7">
+				<img src = "images/backward6.png" class = "pic" width = "100%" alt = "">
+			</div>
+		</div>
+		<br>
+		<div class = "filters">
+			<div class = "pic6">
+				<img src = "images/backward7.png" class = "pic" width = "100%" alt = "">
+			</div>
+			<div class = "pic7">
+				<img src = "images/backward8.png" class = "pic" width = "100%" alt = "">
+			</div>
+		</div>
+		<br>
+		<div class = "filters">
+			<div class = "pic6">
+				<img src = "images/backward9.png" class = "pic" width = "100%" alt = "">
+			</div>
+			<div class = "pic7">
+				<img src = "images/backward10.png" class = "pic" width = "100%" alt = "">
+			</div>
+		</div>
+		<br>
+		<div class = "filters">
+			<div class = "pic6">
+				<img src = "images/backward11.png" class = "pic" width = "100%" alt = "">
+			</div>
+			<div class = "pic7">
+				<img src = "images/backward12.png" class = "pic" width = "100%" alt = "">
+			</div>
+		</div>
+		<br>
+		<div class = "filters">
+			<div class = "pic6">
+				<img src = "images/backward13.png" class = "pic" width = "100%" alt = "">
+			</div>
+			<div class = "pic7">
+				<img src = "images/backward14.png" class = "pic" width = "100%" alt = "">
+			</div>
+		</div>
+
+
+	</body>
+</html>
