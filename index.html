@@ -100,12 +100,12 @@
 				<p>
 					To simplify, i'm just going to look at the first and last neuron of layer 0 (I'll consider the input layer as layer 0) and the first and last neuron of layer 1 (The first hidden layer). <br>
 					<b>Weights W<sub>i(j,k)</sub></b>
-					<li>Each neuron's outgoing connection has a unique weight associated with it. We can denote each unique weight as <b>W<sub>i(j,k)</sub></b> where <b>i - layer, j - neuron from, k - neuron to</b>. </li>
-					<b>Biases b<sub>ij</sub></b>
+					<li>Each neuron's has a set of unique weights associated with it which is applied to the input from the previous layer. We can denote each unique weight as <b>W<sub>i(j,k)</sub></b> where <b>i - layer, j - neuron from, k - neuron to</b>. </li>
+					<b>Biases b<sub>ik</sub></b>
 					<li>Each neuron except the ones from the input (layer 0) have a unique bias. We can denote each unique bias as <b>b<sub>ij</sub></b> where <b>i - layer, j - neuron to</b>. </li>
-					<b>Weighted inputs Z<sub>ij</sub></b>
-					<li>The value entering each neuron is a sum of the weighted inputs + its bias. For example, the value entering the first neuron in layer 1 is Z<sub>ij</sub>. Its value can be calculated as a weighted sum of the inputs plus its bias: <b>Z<sub>11</sub> = W<sub>0(1,1)</sub>*x<sub>1</sub> + W<sub>0(2,1)</sub>*x<sub>2</sub> + W<sub>0(3,1)</sub>*x<sub>3</sub> + W<sub>0(4,1)</sub>*x<sub>4</sub> + b<sub>11</sub></b></li>
-					<b>Outputs</b>
+					<b>Weighted inputs Z<sub>ik</sub></b>
+					<li>The value entering each neuron is a sum of the weighted inputs + its bias. For example, the value entering the first neuron in layer 1 is Z<sub>ij</sub>. Its value can be calculated as a weighted sum of the inputs plus its bias: <b>Z<sub>11</sub> = W<sub>1(1,1)</sub>*x<sub>1</sub> + W<sub>1(2,1)</sub>*x<sub>2</sub> + W<sub>1(3,1)</sub>*x<sub>3</sub> + W<sub>1(4,1)</sub>*x<sub>4</sub> + b<sub>11</sub></b></li>
+					<b>Outputs a<sub>ik</sub></b>
 					<li>The inputs are then run through an activation function which will be covered below. In this neural network we will be using two activation functions <b>ReLU</b> and <b>SoftMax</b>. The output of the function is the output value of the neuron which will serve as the values for the next layer assuming we are not at the final layer.</li>
 				</p>
 			</div>
@@ -168,12 +168,12 @@
 				Softmax is another activation function that allows us to take the output as percentages. At the moment, the logits <b>z<sub>31</sub>, z<sub>32</sub>, z<sub>33</sub> </b> on their own do not represent percentages. The softmax function addresses this by exponentiating each logit, summing these exponentials, and then dividing each exponentiated logit by this total sum. This process effectively converts the logits into a set of values that are interpretable as the model's confidence in each possible outcome, with all the values summing up to 100%. In other words, softmax allows us to evaluate the confidence level of the machine learning model in its predictions, presenting the output as percentages.
 
 				</p>
-				<p>$$\text{softmax}(z_{ij}) = \frac{e^{z_{ij}}}{\sum_{k=1}^{N} e^{z_{ik}}}$$</p>
+				<p>$$\text{softmax}(z_{ik}) = \frac{e^{z_{ik}}}{\sum_{c=1}^{N} e^{z_{ic}}}$$</p>
 				<p>
 				<ul class = "shift">
 					<li><b>Z</b> - the logit</li>
 					<li><b>i</b> - the network layer (usually the last layer if we are using SoftMax)</li>
-					<li><b>j, k</b> - the neuron number</li>
+					<li><b>c, k</b> - the neuron number</li>
 					<li><b>N</b> - the number of logits</li>
 				</ul>
 				</p>
@@ -288,6 +288,33 @@
 			</div>
 			<div class = "pic7">
 				<img src = "images/backward14.png" class = "pic" width = "100%" alt = "">
+			</div>
+		</div>
+		<br>
+		<div class = "filters">
+			<div class = "pic6">
+				<img src = "images/backward15.png" class = "pic" width = "100%" alt = "">
+			</div>
+			<div class = "pic7">
+				<img src = "images/backward16.png" class = "pic" width = "100%" alt = "">
+			</div>
+		</div>
+		<br>
+		<div class = "filters">
+			<div class = "pic6">
+				<img src = "images/backward17.png" class = "pic" width = "100%" alt = "">
+			</div>
+			<div class = "pic7">
+				<img src = "images/backward18.png" class = "pic" width = "100%" alt = "">
+			</div>
+		</div>
+		<br>
+		<div class = "filters">
+			<div class = "pic6">
+				<img src = "images/backward19.png" class = "pic" width = "100%" alt = "">
+			</div>
+			<div class = "pic7">
+				<img src = "images/backward20.png" class = "pic" width = "100%" alt = "">
 			</div>
 		</div>
 
