@@ -268,6 +268,20 @@
 		</div>
 		<br>
 		<div class = "filters">
+			<div class = "potentiometer">
+				<div class = "text">Backpropagation: Time to start fixing our weights/biases</div>
+				<p>From what we saw above about <b>Minimizing loss: Gradient Descent</b>, we could begin to do the same thing for each and every <b>weight and bias</b> we have in our neural network. If we scan through the network, we would be able to see that we have <b>73 parameters in total</b> to update and fine tune. <b>60 weights and 13 biases total</b>. Remember what we were doing in <b>Minimizing loss: Gradient Descent</b>? Find the derivative of the Loss function with respect to the w variable to discover <b>how much w affects the Loss function</b> then we can <b>change the value of w to minimize our Loss</b>. <br><br>
+				We are going to do the exact same thing through our network. This time it will be a little tricker though. No longer are we only differentiating with respect to one variable but we are doing it with respect to many. This is why we need partial differentials. We will calculate the partial derivative of the Loss function with respect to every single individual one of these <b>60 weights and 13 biases</b> such that they may each find their own optimal direction to shift towards. <br><br>
+				Time to implement the <b>chain rule</b>. We always start off from the end of the network and work our way to the beginning because the Loss function output is closest to the most recent weights and biases of layer 3. To find how much each weight and bias from layer 3 affects the loss function, we will have to retrace our steps and see what is the most recent thing that affects the loss function (that would be the output \( \hat{y} \)<sub>k</sub>)). What's the most recent thing that affects \( \hat{y} \)<sub>k</sub>? That would be Z<sub>3k</sub> also known as the logits. What's the most recent thing that affects Z<sub>3k</sub>? That would be W<sub>3jk</sub> and b<sub>3k</sub>. Great! This is what we are interested in updating. 
+
+				</p>
+			</div>
+			<div class = "pic9">
+				<img src = "images/back.png" class = "pic" width = "100%" alt = "">
+			</div>
+		</div>
+		<br>
+		<div class = "filters">
 			<div class = "pic6">
 				<img src = "images/backward.png" class = "pic" width = "100%" alt = "">
 			</div>
