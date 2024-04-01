@@ -142,7 +142,7 @@
 				<img src = "images/relu.png" class = "pic" width = "100%" alt = "">
 			</div>
 		</div>
-		<br><br><br>
+		<br><br>
 		<div class = "filters">
 			<div class = "pic6">
 				<img src = "images/forward3.png" class = "pic" width = "100%" alt = "">
@@ -160,7 +160,7 @@
 				<img src = "images/forward6.png" class = "pic" width = "100%" alt = "">
 			</div>
 		</div>
-		<br><br>
+		<br>
 		<div class = "filters">
 			<div class = "potentiometer">
 				<div class = "text">Activation Function: SoftMax</div>
@@ -207,7 +207,7 @@
 				<img src = "images/loss.png" class = "pic" width = "100%" alt = "">
 			</div>
 		</div>
-		<br><br>
+		<br>
 		<div class = "filters">
 			<div class = "potentiometer">
 				<div class = "text">Minimizing loss: Gradient Descent</div>
@@ -227,6 +227,38 @@
 				<img src = "images/gradients.png" class = "pic" width = "100%" alt = "">
 			</div>
 		</div>
+		<br>
+		<div class = "filters">
+			<div class = "potentiometer">
+				<div class = "text">Global minimum of the loss function is not gauranteed</div>
+				<p>
+				Here we have an example of where gradient descent may not lead us to the global minimum of the loss function. The loss function is given here by <b>L = w<sup>4</sup> + w<sup>3</sup> - 3w<sup>2</sup> + 5.5</b>. If we differentiate the loss function with respect to that particular weight, we get <b>4w<sup>3</sup> + 3w<sup>2</sup> - 6w</b>. If our initial weight is initialized to <b>w = 1</b>, we will \inch towards the local minimum of the Loss function found at <b>(w = 0.91, L = 4.46)</b>, while there is a more desired optimal global minimum found at <b>(w = -1.66, L = 0.25)</b>. Since we have no idea where the global minimum might be, this problem will be difficult to solve. Where we initialize our weight largely determines which local/global minimum we will fall upon. One method to combat this is to train the neural network multiple instances with different randomized weight initializations and find the one that provides us the best minimum loss. The learning rate <b>α - alpha</b> is 0.1 here. A high learning rate <b>α - alpha</b> ensures us we travel across the axis faster but the disadvantage is that we may overshoot the targeted minimum. On the other hand, a low learning rate ensures we will not overshoot, but the disadvantage is that we may take too long to converge to the minimum.
+				<br><br>
+				
+				Initial <b>w = 1, L = 4.5</b><br>
+				After 1st iteration: <b>w = 0.9, L = 4.4551</b><br>
+				After 2nd iteration: <b>w = 0.9054, L = 4.454942</b><br>
+				After 3rd iteration: <b>w = 0.905835, L = 4.454941</b><br>
+				After 4th iteration: <b>w = 0.905866, L = 4.454941</b><br>
+				After 5th iteration: <b>w = 0.905869, L = 4.454941</b><br>
+				</p>
+			</div>
+			<div class = "pic9">
+				<img src = "images/grad2.png" class = "pic" width = "100%" alt = "">
+			</div>
+		</div>
+		<!-- <br>
+		<div class = "filters">
+			<div class = "potentiometer">
+				<div class = "text">Initializing Weights and Biases</div>
+				<p>
+				As shown previously, we have no idea where the optimal weights or biases may lie such that our neural network will provide the optimal performance with minimal loss. Therefore, the weights are initialized randomly using a method called <b>He initialization</b> and the biases are initialized to zero. 
+				</p>
+			</div>
+			<div class = "pic9">
+				<img src = "images/grad2.png" class = "pic" width = "100%" alt = "">
+			</div>
+		</div> -->
 		<br>
 		<div class = "filters">
 			<div class = "pic6">
@@ -317,7 +349,26 @@
 				<img src = "images/backward20.png" class = "pic" width = "100%" alt = "">
 			</div>
 		</div>
-
+		<br><br>
+		<!-- <div class = "filters">
+			<div class = "potentiometer">
+				<div class = "text">Exploding and Vanishing Gradients</div>
+				<p>
+				Here we have an example of where gradient descent may not lead us to the global minimum of the loss function. The loss function is given here by <b>L = w<sup>4</sup> + w<sup>3</sup> - 3w<sup>2</sup> + 5.5</b>. If we differentiate the loss function with respect to that particular weight, we get <b>4w<sup>3</sup> + 3w<sup>2</sup> - 6w</b>. If our initial weight is initialized to <b>w = 1</b>, we will \inch towards the local minimum of the Loss function found at <b>(w = 0.91, L = 4.46)</b>, while there is a more desired optimal global minimum found at <b>(w = -1.66, L = 0.25)</b>. Since we have no idea where the global minimum might be, this problem will be difficult to solve. Where we initialize our weight largely determines which local/global minimum we will fall upon. One method to combat this is to train the neural network multiple instances with different randomized weight initializations and find the one that provides us the best minimum loss. The learning rate <b>α - alpha</b> is 0.1 here. A high learning rate <b>α - alpha</b> ensures us we travel across the axis faster but the disadvantage is that we may overshoot the targeted minimum. On the other hand, a low learning rate ensures we will not overshoot, but the disadvantage is that we may take too long to converge to the minimum.
+				<br><br>
+				
+				Initial <b>w = 1, L = 4.5</b><br>
+				After 1st iteration: <b>w = 0.9, L = 4.4551</b><br>
+				After 2nd iteration: <b>w = 0.9054, L = 4.454942</b><br>
+				After 3rd iteration: <b>w = 0.905835, L = 4.454941</b><br>
+				After 4th iteration: <b>w = 0.905866, L = 4.454941</b><br>
+				After 5th iteration: <b>w = 0.905869, L = 4.454941</b><br>
+				</p>
+			</div>
+			<div class = "pic9">
+				<img src = "images/grad2.png" class = "pic" width = "100%" alt = "">
+			</div>
+		</div> -->
 
 	</body>
 </html>
