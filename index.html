@@ -127,12 +127,12 @@
 			<div class = "potentiometer">
 				<div class = "text">Activation Function: ReLU</div>
 				<p>
-					The activation function introduces non-linearity into our neural network. Without the use of activation functions, our neural network will just be a bunch of linear combinations - that's going to be useless. If a connection is not strong enough, it will just not "fire" the neuron. What ReLU does is it only passes the value z<sub>ij</sub> on if the value exceeds 0. If it is below 0, the connection is simply not strong enough and the output a<sub>ij</sub> will be 0. <br>
+					The activation function introduces non-linearity into our neural network. Without the use of activation functions, our neural network will just be a bunch of linear combinations - that's going to be useless. If a connection is not strong enough, it will just not "fire" the neuron. What ReLU does is it only passes the value z<sub>ik</sub> on if the value exceeds 0. If it is below 0, the connection is simply not strong enough and the output a<sub>ik</sub> will be 0. <br>
 					<br>
 					In simple terms:<br>
-					If z<sub>ij</sub> > 0 then a<sub>ij</sub> = z<sub>ij</sub><br>
+					If z<sub>ik</sub> > 0 then a<sub>ik</sub> = z<sub>ik</sub><br>
 					Otherwise:
-					a<sub>ij</sub> = 0
+					a<sub>ik</sub> = 0
 					<br><br>
 					We can also write the ReLU function as <b>f(x) = max(0, x)</b>.
 
@@ -247,18 +247,25 @@
 				<img src = "images/grad2.png" class = "pic" width = "100%" alt = "">
 			</div>
 		</div>
-		<!-- <br>
+		<br>
 		<div class = "filters">
 			<div class = "potentiometer">
 				<div class = "text">Initializing Weights and Biases</div>
+				<script type="text/x-mathjax-config">
+				  MathJax.Hub.Config({
+				    tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+				  });
+				</script>
+				<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML"></script>
 				<p>
-				As shown previously, we have no idea where the optimal weights or biases may lie such that our neural network will provide the optimal performance with minimal loss. Therefore, the weights are initialized randomly using a method called <b>He initialization</b> and the biases are initialized to zero. 
+				As shown previously, we have no idea where the optimal weights or biases may lie such that our neural network will provide the optimal performance with minimal loss. Therefore, the weights are initialized randomly using a method called <b>He initialization - discovered by Kaiming He</b> and the biases are initialized to zero. <br><br>
+				The Kaiming He initialization works by picking values for each weight from a normal distribution with the standard deviation scaled by <strong>$\sqrt{\frac{2}{\text{fan-in}}}$</strong>, <b>fan-in</b> here means the dimensions of the input layer. So if we were to initialize weights for <b>Layer 1</b>, <b>fan-in would be 4</b>. If we were to initialize weights for <b>Layer 2</b>, <b>fan-in would be 5</b> and so on. In a normal distribution with the standard deviation at 1 and the mean at 0, we would have about a 68% chance of getting a value between (-1, 1), 95% chance of getting a value between (-2, 2) and 99.7% chance of getting a value between (-3, 3). If we scale by <strong>$\sqrt{\frac{2}{\text{fan-in}}}$</strong>, it would be 68% chance between (-<strong>$\sqrt{\frac{2}{\text{fan-in}}}$</strong>, <strong>$\sqrt{\frac{2}{\text{fan-in}}}$</strong>), 95% chance between (<strong>-2$\sqrt{\frac{2}{\text{fan-in}}}$</strong>, <strong>2$\sqrt{\frac{2}{\text{fan-in}}}$</strong>) and 99.7% chance between (<strong>-3$\sqrt{\frac{2}{\text{fan-in}}}$</strong>, <strong>3$\sqrt{\frac{2}{\text{fan-in}}}$</strong>). In general, we can integrate between 2 values <b>a</b> and <b>b</b> in the normal distribution function to find the probability of retrieving a value between a and b. Keep in mind that the chances of getting an exact value is 0 because there are infinitely possible many values (eg. there are infinite values 0.1, 0.11, 0.111 between 0.1 and 0.12).
 				</p>
 			</div>
 			<div class = "pic9">
-				<img src = "images/grad2.png" class = "pic" width = "100%" alt = "">
+				<img src = "images/he.png" class = "pic" width = "100%" alt = "">
 			</div>
-		</div> -->
+		</div>
 		<br>
 		<div class = "filters">
 			<div class = "pic6">
