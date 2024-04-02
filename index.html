@@ -102,7 +102,7 @@
 					<b>Weights W<sub>i(j,k)</sub></b>
 					<li>Each neuron's has a set of unique weights associated with it which is applied to the input from the previous layer. We can denote each unique weight as <b>W<sub>i(j,k)</sub></b> where <b>i - layer, j - neuron from, k - neuron to</b>. </li>
 					<b>Biases b<sub>ik</sub></b>
-					<li>Each neuron except the ones from the input (layer 0) have a unique bias. We can denote each unique bias as <b>b<sub>ij</sub></b> where <b>i - layer, j - neuron to</b>. </li>
+					<li>Each neuron except the ones from the input (layer 0) have a unique bias. We can denote each unique bias as <b>b<sub>ik</sub></b> where <b>i - layer, k - neuron to</b>. </li>
 					<b>Weighted inputs Z<sub>ik</sub></b>
 					<li>The value entering each neuron is a sum of the weighted inputs + its bias. For example, the value entering the first neuron in layer 1 is Z<sub>ij</sub>. Its value can be calculated as a weighted sum of the inputs plus its bias: <b>Z<sub>11</sub> = W<sub>1(1,1)</sub>*x<sub>1</sub> + W<sub>1(2,1)</sub>*x<sub>2</sub> + W<sub>1(3,1)</sub>*x<sub>3</sub> + W<sub>1(4,1)</sub>*x<sub>4</sub> + b<sub>11</sub></b></li>
 					<b>Outputs a<sub>ik</sub></b>
@@ -259,7 +259,7 @@
 				<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML"></script>
 				<p>
 				As shown previously, we have no idea where the optimal weights or biases may lie such that our neural network will provide the optimal performance with minimal loss. Therefore, the weights are initialized randomly using a method called <b>He initialization - discovered by Kaiming He</b> and the biases are initialized to zero. <br><br>
-				The Kaiming He initialization works by picking values for each weight from a normal distribution with the standard deviation scaled by <strong>$\sqrt{\frac{2}{\text{fan-in}}}$</strong>, <b>fan-in</b> here means the dimensions of the input layer. So if we were to initialize weights for <b>Layer 1</b>, <b>fan-in would be 4</b>. If we were to initialize weights for <b>Layer 2</b>, <b>fan-in would be 5</b> and so on. In a normal distribution with the standard deviation at 1 and the mean at 0, we would have about a 68% chance of getting a value between (-1, 1), 95% chance of getting a value between (-2, 2) and 99.7% chance of getting a value between (-3, 3). If we scale by <strong>$\sqrt{\frac{2}{\text{fan-in}}}$</strong>, it would be 68% chance between (-<strong>$\sqrt{\frac{2}{\text{fan-in}}}$</strong>, <strong>$\sqrt{\frac{2}{\text{fan-in}}}$</strong>), 95% chance between (<strong>-2$\sqrt{\frac{2}{\text{fan-in}}}$</strong>, <strong>2$\sqrt{\frac{2}{\text{fan-in}}}$</strong>) and 99.7% chance between (<strong>-3$\sqrt{\frac{2}{\text{fan-in}}}$</strong>, <strong>3$\sqrt{\frac{2}{\text{fan-in}}}$</strong>). In general, we can integrate between 2 values <b>a</b> and <b>b</b> in the normal distribution function to find the probability of retrieving a value between a and b. Keep in mind that the chances of getting an exact value is 0 because there are infinitely possible many values (eg. there are infinite values 0.1, 0.11, 0.111 between 0.1 and 0.12).
+				The Kaiming He initialization works by picking values for each weight from a normal distribution with the standard deviation scaled by <strong>$\sqrt{\frac{2}{\text{fan-in}}}$</strong>, <b>fan-in</b> here means the dimensions of the input layer. So if we were to initialize weights for <b>Layer 1</b>, <b>fan-in would be 4</b>. If we were to initialize weights for <b>Layer 2</b>, <b>fan-in would be 5</b> and so on. In a normal distribution with the standard deviation at 1 and the mean at 0, we would have about a 68% chance of getting a value between (-1, 1), 95% chance of getting a value between (-2, 2) and 99.7% chance of getting a value between (-3, 3). If we scale by <strong>$\sqrt{\frac{2}{\text{fan-in}}}$</strong>, it would be 68% chance between (-<strong>$\sqrt{\frac{2}{\text{fan-in}}}$</strong>, <strong>$\sqrt{\frac{2}{\text{fan-in}}}$</strong>), 95% chance between (<strong>-2$\sqrt{\frac{2}{\text{fan-in}}}$</strong>, <strong>2$\sqrt{\frac{2}{\text{fan-in}}}$</strong>) and 99.7% chance between (<strong>-3$\sqrt{\frac{2}{\text{fan-in}}}$</strong>, <strong>3$\sqrt{\frac{2}{\text{fan-in}}}$</strong>). In general, we can integrate between 2 values <b>a</b> and <b>b</b> in the normal distribution function to find the probability of retrieving a value between a and b. Keep in mind that the probability of getting an exact value is 0 because there are infinitely possible many values (eg. there are infinite values 0.1, 0.11, 0.111... between 0.1 and 0.12).
 				</p>
 			</div>
 			<div class = "pic9">
@@ -371,6 +371,19 @@
 			</div>
 		</div>
 		<br><br>
+		<div class = "filters">
+			<div class = "potentiometer">
+				<div class = "text">Going from Math -> Code</div>
+				<p>Here we analyze how we might write the code for the backpropagation algorithm. In the example, we our trying to solve \( \frac{\partial L}{\partial w_{1jk}} \) and \( \frac{\partial L}{\partial b_{k}} \). Notice another introduction of two variables k and k'. The purpose of this is because each <b>a<sub>i</sub></b> affects every <b>z<sub>(i + 1)</sub></b>. For example <b>a<sub>11</sub></b> will be found in <b>z<sub>21</sub>, z<sub>22</sub> ... z<sub>25</sub></b>. Therefore we have to introduce another variable <b>k'</b> where <b>k'</b> is not necessarily equal to <b>k</b>. Since the calculation for \( \frac{\partial L}{\partial w_{1jk}} \) and \( \frac{\partial L}{\partial b_{k}} \) are almost the same, I will just focus on \( \frac{\partial L}{\partial w_{1jk}} \). <br><br>
+					$$\frac{\partial L}{\partial w_{1jk}} = \frac{\partial L}{\partial z_2k'} \cdot \frac{\partial z_2k'}{\partial a_1k} \cdot \frac{\partial a_1k}{\partial z_{1k}} \cdot \frac{\partial z_1k}{\partial w_{1jk}}$$
+					The term \( \frac{\partial L}{\partial z_{2k'}} \) was already calculated in layer 2. The term \( \frac{\partial z_{2k'}}{\partial a_{1k}} \) is simply the weights associated with layer 2. This is the value returned from the previous function call so we can pass it in as parameter \( \frac{\partial L}{\partial a_{1k}} \) with the variable named <b>dL_da</b>. All that is left to do is to calculate \( \frac{\partial a_{1k}}{\partial z_{1k}} \) which is the <b>derivative of ReLU</b>. <i><b>(</b>*Note that if we are coming from the output layer, we will omit the multiplication with <b>ReLU'</b>. I wrote it such that the initial incoming <b>dL_da</b> will automatically be the calculated \( \frac{\partial L}{\partial z_{3k}} \)<b>)</b></i>. And also calculate \( \frac{\partial z_{1k}}{\partial w_{1jk}} \) which is <b>a<sub>0jk</sub></b> or in this case, the initial inputs <b>(x<sub>1</sub>,x<sub>2</sub>,x<sub>3</sub>,x<sub>4</sub>)</b>. For this example, we may not have any more weights or biases to update but in the general case where we have to keep going backwards, we can simply return <b>prev_dL_da</b> = \( \frac{\partial L}{\partial a_{(i-1)k}} \) so that the next time we call the <b>backward function</b>, we will have our <b>dL_da</b> ready to go. 
+
+				</p>
+			</div>
+			<div class = "pic9">
+				<img src = "images/code.png" class = "pic" width = "100%" alt = "">
+			</div>
+		</div>
 		<!-- <div class = "filters">
 			<div class = "potentiometer">
 				<div class = "text">Exploding and Vanishing Gradients</div>
