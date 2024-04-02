@@ -375,13 +375,82 @@
 			<div class = "potentiometer">
 				<div class = "text">Going from Math -> Code</div>
 				<p>Here we analyze how we might write the code for the backpropagation algorithm. In the example, we our trying to solve \( \frac{\partial L}{\partial w_{1jk}} \) and \( \frac{\partial L}{\partial b_{k}} \). Notice another introduction of two variables k and k'. The purpose of this is because each <b>a<sub>i</sub></b> affects every <b>z<sub>(i + 1)</sub></b>. For example <b>a<sub>11</sub></b> will be found in <b>z<sub>21</sub>, z<sub>22</sub> ... z<sub>25</sub></b>. Therefore we have to introduce another variable <b>k'</b> where <b>k'</b> is not necessarily equal to <b>k</b>. Since the calculation for \( \frac{\partial L}{\partial w_{1jk}} \) and \( \frac{\partial L}{\partial b_{k}} \) are almost the same, I will just focus on \( \frac{\partial L}{\partial w_{1jk}} \). <br><br>
-					$$\frac{\partial L}{\partial w_{1jk}} = \frac{\partial L}{\partial z_2k'} \cdot \frac{\partial z_2k'}{\partial a_1k} \cdot \frac{\partial a_1k}{\partial z_{1k}} \cdot \frac{\partial z_1k}{\partial w_{1jk}}$$
+					$$\frac{\partial L}{\partial w_{1jk}} = \frac{\partial L}{\partial z_{2k'}} \cdot \frac{\partial z_{2k'}}{\partial a_{1k}} \cdot \frac{\partial a_{1k}}{\partial z_{1k}} \cdot \frac{\partial z_{1k}}{\partial w_{1jk}}$$
 					The term \( \frac{\partial L}{\partial z_{2k'}} \) was already calculated in layer 2. The term \( \frac{\partial z_{2k'}}{\partial a_{1k}} \) is simply the weights associated with layer 2. This is the value returned from the previous function call so we can pass it in as parameter \( \frac{\partial L}{\partial a_{1k}} \) with the variable named <b>dL_da</b>. All that is left to do is to calculate \( \frac{\partial a_{1k}}{\partial z_{1k}} \) which is the <b>derivative of ReLU</b>. <i><b>(</b>*Note that if we are coming from the output layer, we will omit the multiplication with <b>ReLU'</b>. I wrote it such that the initial incoming <b>dL_da</b> will automatically be the calculated \( \frac{\partial L}{\partial z_{3k}} \)<b>)</b></i>. And also calculate \( \frac{\partial z_{1k}}{\partial w_{1jk}} \) which is <b>a<sub>0jk</sub></b> or in this case, the initial inputs <b>(x<sub>1</sub>,x<sub>2</sub>,x<sub>3</sub>,x<sub>4</sub>)</b>. For this example, we may not have any more weights or biases to update but in the general case where we have to keep going backwards, we can simply return <b>prev_dL_da</b> = \( \frac{\partial L}{\partial a_{(i-1)k}} \) so that the next time we call the <b>backward function</b>, we will have our <b>dL_da</b> ready to go. 
 
 				</p>
 			</div>
 			<div class = "pic9">
 				<img src = "images/code.png" class = "pic" width = "100%" alt = "">
+			</div>
+		</div>
+		<br><br>
+		<div class = "filters">
+			<div class = "potentiometer">
+				<div class = "text">The general equation</div>
+				<p>
+					In general we can come up with the following formulas: <br><br>
+					$$\frac{\partial L}{\partial w_{ijk}} = \frac{\partial L}{\partial a_{ik}} \cdot \frac{\partial a_{ik}}{\partial z_{ik}} \cdot \frac{\partial z_{ik}}{\partial w_{ijk}}$$
+					$$\frac{\partial L}{\partial b_{ik}} = \frac{\partial L}{\partial a_{ik}} \cdot \frac{\partial a_{ik}}{\partial z_{ik}} \cdot \frac{\partial z_{ik}}{\partial b_{ik}}$$<br>
+					<ul class = "shift">
+						<li>
+							\( \frac{\partial L}{\partial w_{ijk}} \) : Derivative of <b>Loss function</b> with respect to the <b>weight</b> in the <b>i<sup>th</sup> layer</b>, corresponding to the value coming from the <b>j<sup>th</sup> neuron</b> in <b>layer<sub>i-1</sub></b>, and the value going in the <b>k<sup>th</sup> neuron</b> in <b>layer<sub>i</sub></b>. 
+						</li>
+						<br>
+						<li>
+							\( \frac{\partial L}{\partial b_{ik}} \) : Derivative of <b>Loss function</b> with respect to the <b>bias</b> in the <b>i<sup>th</sup> layer</b>, corresponding to the value going in the <b>k<sup>th</sup> neuron</b> in <b>layer<sub>i</sub></b>. 
+						</li>
+					</ul>
+
+				</p>
+			</div>
+			<div class = "potentiometer2">
+				<div class = "text">Evaluate Model</div>
+				<p>Once we have shifted the weights and biases for a certain number of defined <b>epochs</b> (how many times we pass each and every single data point in (X-train, y-train) through the model, we should end up with some pretty good looking <b>weights</b> and <b>biases</b>. <br><br>
+
+				The data from <b>X-test</b> would be sent through the model and for every <b>X-test</b>, there will be an output result <strong>\( \hat{y} \)</strong>. We will then compare <strong>\( \hat{y} \)</strong> with the true answers found in <b>y-test</b>. The total correct / total number of tests would be the accuracy. <br><br>
+				In most categorical models, the output will come out something like <b>[0.013, 0.022, 0.96]</b>. To evaluate this, we simply select the largest value in this list since that is the category that the model most confidently thinks the answer is. We evaluate it with the true answer. If the true answer is <b>[0, 0, 1]</b>, it will be counted as correct. If it is <b>[0, 1, 0]</b> or <b>[1, 0, 0]</b> that would be incorrect. <br><br>
+				Next I am going to run through an example of what it looks like when we try to make a prediction with some pretty good weights and biases. 
+				</p>
+			</div>
+		</div>
+		<br>
+		<div class = "filters">
+			<div class = "potentiometer">
+				<div class = "text">Walking through a Trained Model</div>
+				<p>Lets say our model is trained and ready to go!<br><br>
+					Our weights and biases are pretty well optimized which are shown in the picture.<br><br>
+					Lets do a mini evaluation with one data point (usually we evaluate on many more data points to see how well it really performs but this is an example). Below is a data pair from (X-test and y-test).<br><br>
+					<ul class = "shift">
+						<li><b>x1 - Sepal Length: 7.7 cm</b></li>
+						<li><b>x2 - Sepal Width: 2.6 cm</b></li>
+						<li><b>x3 - Petal Length: 6.9 cm</b></li>
+						<li><b>x4 - Petal Width: 2.3 cm</b></li>
+					</ul>
+					<br><br>
+					The true answer is <b>Iris Virginica: [0, 0, 1]</b>, but shush we're not going to tell the model that. Let's see if it can figure it out on its own <b>:)</b>
+				</p>
+			</div>
+			<div class = "pic9">
+				<img src = "images/my_weights.png" class = "pic" width = "100%" alt = "">
+			</div>
+		</div>
+		<br>
+		<div class = "filters">
+			<div class = "pic6">
+				<img src = "images/test1.png" class = "pic" width = "100%" alt = "">
+			</div>
+			<div class = "pic7">
+				<img src = "images/test2.png" class = "pic" width = "100%" alt = "">
+			</div>
+		</div>
+		<br>
+		<div class = "filters">
+			<div class = "pic6">
+				<img src = "images/test3.png" class = "pic" width = "100%" alt = "">
+			</div>
+			<div class = "pic7">
+				<img src = "images/test4.png" class = "pic" width = "100%" alt = "">
 			</div>
 		</div>
 		<!-- <div class = "filters">

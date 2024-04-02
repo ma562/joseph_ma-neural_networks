@@ -158,6 +158,17 @@
 	left: 2%;
 }
 
+.potentiometer2 {
+	width: 45%;
+	font-family: 'Poppins', sans-serif;
+	color: #00274c;
+	margin-left: 20px;
+	margin-right:20px;
+	text-align: justify;
+	position: relative;
+	right: 2%;
+}
+
 .filters_about_2 {
 	width: 45%;
 	font-family: 'Poppins', sans-serif;
@@ -206,7 +217,7 @@
 
 
 @media (max-width: 1200px){
-	.potentiometer, .pic8, .pic1, .information{
+	.potentiometer, .potentiometer2, .pic8, .pic1, .information{
 		flex: 100%;
 		left: 0%;
 		right: 0%;
